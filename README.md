@@ -6,7 +6,7 @@
 
 ## ▶ ゲームをプレイ
 
-[▶ 今すぐ遊ぶ](https://YOUR-USERNAME.github.io/YOUR-REPOSITORY/)
+[▶ 今すぐ遊ぶ](https://siro-pj-tech.github.io/1sec-hero/)
 
 <!-- 公開URL取得後、上のリンク先を実際のGitHub Pages URLへ変更してください。 -->
 
