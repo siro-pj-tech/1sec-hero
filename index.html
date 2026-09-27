@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101d22">
+  <meta name="description" content="長押しして、1秒で離す。ひとつのボタンで剣と盾を操る小さな冒険。">
+  <title>1 SEC HERO — 一秒の勇者</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23101d22'/%3E%3Ctext x='32' y='48' text-anchor='middle' font-size='48' fill='%23edca7b'%3E1%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./game-core.js" defer></script>
+  <script src="./audio.js" defer></script>
+  <script src="./hero-animation.js" defer></script>
+  <script src="./enemy-animation.js" defer></script>
+  <script src="./game.js" defer></script>
+</head>
+<body>
+  <svg class="svg-defs" aria-hidden="true"><defs>
+    <symbol id="icon-sword" viewBox="0 0 64 64"><path d="M25 39 48 8l8-2-1 9-25 29z" fill="currentColor"/><path d="m17 33 18 16M24 41 11 55M8 50l9 9" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 64 64"><path d="M32 5 54 14v18c0 14-14 24-22 28C24 56 10 46 10 32V14z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M32 14v36c13-8 14-15 14-22v-8z" fill="currentColor"/></symbol>
+    <symbol id="icon-gold" viewBox="0 0 64 64"><ellipse cx="32" cy="33" rx="23" ry="25" fill="none" stroke="currentColor" stroke-width="5"/><path d="M38 21H27c-9 0-9 12 0 12h9c9 0 9 12 0 12H24m8-30v36" fill="none" stroke="currentColor" stroke-width="4"/></symbol>
+  </defs></svg>
+  <main class="shell">
+    <header class="masthead">
+      <a class="wordmark" href="./index.html" aria-label="タイトルに戻る">1 SEC <span>HERO</span><small>一秒の勇者</small></a>
+      <div class="header-actions"><span class="edition">Ver1.00</span><button id="settings-open" class="options-button" aria-label="オプションを開く">⚙ <span>オプション</span></button></div>
+    </header>
+
+    <section id="title-screen" class="title-screen">
+      <div class="title-art"><div class="title-shade"></div><div class="title-copy"><p class="eyebrow">A LITTLE QUEST. ONE PERFECT SECOND.</p><h1 class="title-logo"><img src="./assets/ui/1sechero_title.png" alt="その一秒が、世界を救う。"></h1><p>押して、ためて、1秒で離す。<br>剣も盾も、指ひとつで。</p></div><div class="title-knight"></div><span class="art-caption">THE JOURNEY TO THE DEMON CASTLE</span></div>
+      <div class="title-footer"><div class="title-clock"><p>1秒を胸に刻め</p><div><strong id="title-seconds">00</strong><span>秒</span></div><div class="title-second-track" aria-hidden="true"><i id="title-second-progress"></i></div></div><p id="selected-difficulty" class="difficulty-status"></p><button id="start-button" class="primary-button" disabled>素材を読み込み中…</button><p id="load-note" class="muted">タッチ・マウス・Spaceキーに対応 / 全10ステージ / HPは持ち越し</p></div>
+    </section>
+
+    <section id="play-screen" hidden>
+      <div class="journey"><div><span class="eyebrow" id="region-label">THE GREENLANDS</span><h1 id="stage-title">はじまりの草原</h1></div><div class="stage-count"><b id="stage-number">01</b><span>/ 10</span></div></div>
+      <div id="route" class="route" aria-label="進行状況"></div>
+      <div class="battle-layout">
+        <div class="battle-panel">
+          <div class="combat-hud"><div class="hp-block"><div><span>勇者</span><b id="hero-hp-text">100 / 100</b></div><div class="hp-track"><i id="hero-hp"></i></div></div><span class="versus">VS</span><div class="hp-block enemy-hp"><div><span id="enemy-name">スライム</span><b id="enemy-hp-text"></b></div><div class="hp-track"><i id="enemy-hp"></i></div></div></div>
+          <div class="arena"><canvas id="arena" width="512" height="336" aria-label="勇者と敵の戦闘シーン"></canvas><div class="arena-vignette"></div><div id="arena-banner" class="arena-banner">草原を越えて、魔王城へ。</div><div id="hit-label" class="hit-label"></div><div id="death-label" class="death-label" hidden>GAME OVER</div><div class="arena-bottom"><span id="turn-hint">一秒に、集中。</span><span id="gold-display">0 G</span></div></div>
+          <div class="battle-caption"><span id="enemy-flavor">冒険は、小さな一歩から。</span><button id="pause-button" class="text-button">一時停止</button></div>
+        </div>
+        <div class="control-panel" id="control-panel">
+          <div class="mode-heading"><span id="difficulty-badge" class="difficulty-badge"></span><span id="mode-label" class="eyebrow">SWORD / 攻撃</span><h2 id="action-instruction">1秒で離して攻撃！</h2></div>
+          <div class="dial-wrap" id="dial-wrap">
+            <svg class="dial" viewBox="0 0 240 240" aria-hidden="true"><circle class="dial-track" cx="120" cy="120" r="103"/><circle class="dial-window" cx="120" cy="120" r="103"/><circle id="dial-progress" class="dial-progress" cx="120" cy="120" r="103"/><path class="target-notch" d="m18 170 18-2-8 15z"/><text x="23" y="191" class="target-label">1.0</text></svg>
+            <button id="action-button" class="action-button" aria-label="長押しして1秒で離す" disabled><img id="action-art" src="./assets/ui/Attack_button.png" alt="" draggable="false"><svg aria-hidden="true"><use id="action-icon" href="#icon-sword"/></svg><span id="button-lock" hidden aria-hidden="true">Ⅱ</span><span id="button-label">長押し</span><small id="button-subtitle">HOLD & RELEASE</small></button>
+          </div>
+          <div class="timing empty" id="timing-result" aria-live="polite" aria-hidden="true"><span id="timing-value"></span><small>SEC</small></div>
+          <p id="result-line" class="result-line" aria-live="polite">光を1.0の目印に合わせよう</p>
+          <div class="next-defense"><span>次の防御</span><div id="defense-pips" class="defense-pips"></div><small id="defense-count">あと3回</small></div>
+          <p class="control-note">剣も盾も、操作は同じ。<br>押してから1秒で離そう。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="shop-screen" class="shop-screen" hidden>
+      <div class="shop-art"><img src="./assets/backgrounds/itemshop512.png" alt="品物が並ぶ店内で迎える店主"></div>
+      <div class="shop-heading"><p class="eyebrow">FAIRY TREE EMPORIUM</p><h1>旅の合間の、小さな支度。</h1><p id="shop-description">次の戦いに備えて、力を選ぼう。</p><div class="wallet"><svg><use href="#icon-gold"/></svg><b id="shop-gold">0</b><span>G</span></div></div>
+      <div id="shop-cards" class="shop-cards"></div>
+      <div class="shop-footer"><p id="shop-message" aria-live="polite">体力は次のステージへ持ち越します。</p><button id="shop-return" class="primary-button">戻る <small>次の戦いへ →</small></button></div>
+    </section>
+
+    <section id="end-screen" class="end-screen" hidden><div class="end-art"><img id="end-art" src="./assets/backgrounds/allclear512.png" alt=""></div><div class="end-content"><p class="eyebrow" id="end-eyebrow">THE JOURNEY CONTINUES</p><h1 id="end-title"></h1><p id="end-message"></p><div id="score-panel" class="score-panel" hidden><span class="eyebrow">YOUR HERO SCORE</span><strong id="final-score">0</strong><details><summary>スコアの内訳</summary><div id="score-breakdown"></div></details></div><div id="end-stats" class="end-stats"></div><button id="retry-button" class="primary-button">もう一度、挑む</button><button id="credits-button" class="text-button" hidden>エピローグを読む</button><button id="end-title-button" class="text-button">タイトルへ</button></div></section>
+
+    <footer class="page-footer"><span>ONE BUTTON. ONE SECOND.</span><span id="footer-status">小さな冒険、準備中。</span></footer>
+  </main>
+  <div id="scene-fade" class="scene-fade" aria-hidden="true"></div>
+
+  <dialog id="settings-dialog"><form method="dialog"><div class="dialog-heading"><h2>オプション</h2><button class="icon-button" aria-label="閉じる">×</button></div>
+    <label>Audio / BGM <input id="bgm-volume" type="range" min="0" max="100" value="35"><output id="bgm-value">35%</output></label>
+    <label>SE / 効果音 <input id="se-volume" type="range" min="0" max="100" value="55"><output id="se-value">55%</output></label>
+    <button id="se-preview" class="text-button" type="button">効果音を試聴</button>
+    <fieldset id="music-player" class="music-player"><legend>ミュージックプレイヤー</legend><label for="music-select">楽曲ファイル</label><select id="music-select"></select><p class="muted">タイトル画面でのみ選曲できます。</p></fieldset>
+    <fieldset class="difficulty-options"><legend>難易度</legend><p class="difficulty-warning">変更を反映するには、タイトルに戻って新しい冒険を開始してください。途中の冒険・敗北後の再挑戦には反映されません。タイトルに戻ると現在の進行はリセットされます。</p>
+      <label><input type="radio" name="difficulty" value="rookie"><span><b>ルーキー</b><small>ゲージあり · 従来の判定幅（命中 ±260ms）</small></span></label>
+      <label><input type="radio" name="difficulty" value="veteran" checked><span><b>ベテラン</b><small>ゲージあり · 精密な一秒（命中 ±50ms）</small></span></label>
+      <label><input type="radio" name="difficulty" value="hero"><span><b>ヒーロー</b><small>ゲージなし · 感覚だけで挑む（命中 ±50ms）</small></span></label>
+    </fieldset><p id="difficulty-note" class="muted">難易度は次の冒険から適用します。</p>
+    <label class="check-label"><input id="reduced-motion" type="checkbox"> 揺れ・発光を控えめにする</label><p class="muted">設定中はゲームが止まります。BGMは音量を確認できます。</p><button class="primary-button">設定を保存して戻る</button></form></dialog>
+  <dialog id="pause-dialog"><h2>ひと休み。</h2><p>計測中だった場合は、最初からやり直せます。</p><button id="resume-button" class="primary-button">続ける</button></dialog>
+<dialog id="epilogue-dialog" aria-labelledby="epilogue-title"><div class="dialog-heading"><h2 id="epilogue-title">エピローグ</h2><button id="epilogue-close" class="icon-button" aria-label="エピローグを閉じる">×</button></div><p class="muted">下へスクロールしてお読みください。</p><article id="epilogue-text" tabindex="0" aria-label="エピローグ本文"><p>魔王が倒れた瞬間、城を覆っていた黒い雲がゆっくりと消えていった。</p><p>長いあいだ太陽を隠していた雲の隙間から、一本の光が差し込む。</p><p>ヒーローは剣を地面に突き立て、その場に腰を下ろした。</p><p>勝ったという実感は、不思議となかった。</p><p>ただ、静かだった。</p><p>魔物の叫びも、剣がぶつかる音も、もう聞こえない。</p><p>遠くを見ると、山の向こうから朝日が昇り始めている。</p><p>「……終わったのか」</p><p>それだけ呟いた。</p><p>王国へ戻る道では、戦いの傷跡がそこかしこに残っていた。</p><p>焼けた家。</p><p>壊れた橋。</p><p>荒れた畑。</p><p>けれど、その傍らでは人々が瓦礫を片付け、新しい柱を立て、畑を耕していた。</p><p>子供たちは久しぶりに外を走り回っている。</p><p>町へ入ると、人々はヒーローの姿を見つけて歓声を上げた。</p><p>「勇者だ！」</p><p>「魔王を倒したぞ！」</p><p>花びらが舞い、鐘が鳴る。</p><p>ヒーローは少し困ったように笑った。</p><p>そして誰にも聞こえないくらいの声で呟く。</p><p>「俺が世界を救ったんじゃない。  
+ みんなが、今日まで諦めなかっただけだ。」</p><p>王城では盛大な式典が用意されていた。</p><p>王はヒーローに金銀財宝と、騎士団長の地位を与えようとする。</p><p>だがヒーローは首を振った。</p><p>「ひとつだけ、お願いがあります」</p><p>王が尋ねる。</p><p>「何を望む？」</p><p>ヒーローは城の窓から、活気を取り戻しつつある町を見下ろした。</p><p>「この金を、壊れた町を直すために使ってください」</p><p>王はしばらく黙った後、静かに頷いた。</p><p>その翌朝。</p><p>王国の門を、一人の旅人が出ていく。</p><p>豪華な鎧もない。</p><p>凱旋の旗もない。</p><p>いつもの剣を一本だけ背負っている。</p><p>門番が驚いて尋ねる。</p><p>「勇者様、どこへ？」</p><p>ヒーローは振り返る。</p><p>「さあな」</p><p>そして少し笑う。</p><p>「平和になった世界ってやつを、まだちゃんと見たことがないんだ」</p><p>ヒーローは歩き出す。</p><p>草原には風が吹き、鳥が飛び、遠くの町から鐘の音が聞こえてくる。</p><p>そして最後に、ヒーローの独白。</p><p><strong>「世界を変えるのに必要だったのは、長い時間じゃなかった。」</strong>  
+<strong>「剣を振るう、その一瞬。」</strong>  
+<strong>「逃げるか、立ち向かうかを決める、その一瞬。」</strong></p><p><strong>「たった一秒でも、人は未来を変えられる。」</strong>     
+<strong>「だから俺は、次の一歩を踏み出す。」</strong></p><hr><p>最後まで遊んでいただき、本当にありがとうございました。</p><p>あなたが刻んだ“一秒”の積み重ねが、この物語の結末へとつながりました。</p><p>このゲームが、ほんの少しでも楽しい時間になっていれば嬉しいです。</p><p>またどこかで、新しい冒険に出会えますように。</p><p>また、本作の効果音には「効果音ラボ」様のフリー素材を使用させていただきました。</p><p>素晴らしい素材を公開してくださっていることに、心より感謝いたします。</p><p>効果音ラボ
+<a href="https://soundeffect-lab.info/" target="_blank" rel="noopener noreferrer">https://soundeffect-lab.info/</a></p><p>THANK YOU FOR PLAYING!</p><hr></article></dialog>
+  <noscript>このゲームにはJavaScriptが必要です。</noscript>
+</body>
+</html>
