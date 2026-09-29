@@ -13,7 +13,7 @@
     ['demon_king','魔王',1950,84,'demon_castle','最後の一秒','世界の夜明けを、その手で。']
   ].map((v,i)=>({id:v[0],name:v[1],hp:v[2],atk:v[3],region:v[4],title:v[5],flavor:v[6],reward:55+i*20}));
   const CONFIG = {maxHp:100, attackEvery:3, maxHold:1.5, retry:'first-stage', maxLevel:10, defaultDifficulty:'veteran'};
-  const SCENE_TIMES = {enemyDefeat:2400,enemyFadeStart:170,enemyFadeEnd:1870,fatalFastFrame:140,fatalSlowFrame:600,deathFall:4000,deathHold:3000,deathTitle:3000,deathFade:700,reveal:600};
+  const SCENE_TIMES = {enemyDefeat:2400,enemyFadeStart:170,enemyFadeEnd:1870,fatalFastFrame:140,fatalSlowFrame:600,deathFall:4000,deathHold:2000,deathTitle:3000,deathFade:700,reveal:600};
   const DIFFICULTIES = {
     rookie:{name:'ルーキー',windows:[.065,.143,.260],gauge:true},
     veteran:{name:'ベテラン',windows:[.020,.035,.050],gauge:true},

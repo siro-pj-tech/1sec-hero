@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const MUSIC={title:'Chronicles of the Divided Realm',battle:'Sword Magic Battle',boss:'Lord of Despair',shop:'Fairy Tree Emporium',clear:'Peace Restored',credits:'Dawn of the New Era',over:'Requiem for the Fallen'};
-  const EFFECTS=['hold_start','judge_perfect','judge_great','judge_good','judge_miss','guard_warning','guard_block','guard_perfect','hero_damage','enemy_defeat','shop_buy','ui_confirm','relive'];
+  const EFFECTS=['hold_start','judge_perfect','judge_great','judge_good','judge_miss','guard_warning','guard_block','guard_perfect','hero_damage','enemy_defeat','shop_buy','shop_charges','ui_confirm','relive'];
   class HeroSound {
     constructor(settings,onError){this.settings=settings;this.onError=onError;this.tracks={};this.current='title';this.unlocked=false;this.suspended=false;this.voices=new Set();this.pool={};this.hold=null;this.holdTimer=null;
       for(const key of EFFECTS){const voice=new Audio(`./assets/audio/se_lab/${key}.mp3`);voice.preload='auto';this.pool[key]=[voice];}

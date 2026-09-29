@@ -23,7 +23,7 @@
   <main class="shell">
     <header class="masthead">
       <a class="wordmark" href="./index.html" aria-label="タイトルに戻る">1 SEC <span>HERO</span><small>一秒の勇者</small></a>
-      <div class="header-actions"><span class="edition">Ver1.00</span><button id="settings-open" class="options-button" aria-label="オプションを開く">⚙ <span>オプション</span></button></div>
+      <div class="header-actions"><span class="edition">Ver1.01</span><button id="settings-open" class="options-button" aria-label="オプションを開く">⚙ <span>オプション</span></button></div>
     </header>
 
     <section id="title-screen" class="title-screen">
@@ -32,31 +32,28 @@
     </section>
 
     <section id="play-screen" hidden>
-      <div class="journey"><div><span class="eyebrow" id="region-label">THE GREENLANDS</span><h1 id="stage-title">はじまりの草原</h1></div><div class="stage-count"><b id="stage-number">01</b><span>/ 10</span></div></div>
+      <div class="journey"><div><span class="eyebrow" id="region-label">THE GREENLANDS</span><h1 id="stage-title">はじまりの草原</h1></div><div class="stage-count"><span>STAGE：</span><b id="stage-number">01</b></div></div>
       <div id="route" class="route" aria-label="進行状況"></div>
       <div class="battle-layout">
         <div class="battle-panel">
           <div class="combat-hud"><div class="hp-block"><div><span>勇者</span><b id="hero-hp-text">100 / 100</b></div><div class="hp-track"><i id="hero-hp"></i></div></div><span class="versus">VS</span><div class="hp-block enemy-hp"><div><span id="enemy-name">スライム</span><b id="enemy-hp-text"></b></div><div class="hp-track"><i id="enemy-hp"></i></div></div></div>
-          <div class="arena"><canvas id="arena" width="512" height="336" aria-label="勇者と敵の戦闘シーン"></canvas><div class="arena-vignette"></div><div id="arena-banner" class="arena-banner">草原を越えて、魔王城へ。</div><div id="hit-label" class="hit-label"></div><div id="death-label" class="death-label" hidden>GAME OVER</div><div class="arena-bottom"><span id="turn-hint">一秒に、集中。</span><span id="gold-display">0 G</span></div></div>
-          <div class="battle-caption"><span id="enemy-flavor">冒険は、小さな一歩から。</span><button id="pause-button" class="text-button">一時停止</button></div>
+          <div class="arena"><canvas id="arena" width="512" height="336" aria-label="勇者と敵の戦闘シーン"></canvas><div class="arena-vignette"></div><div id="death-label" class="death-label" hidden>GAME OVER</div></div>
+          <div class="battle-message" id="battle-message" role="status" aria-live="polite" aria-atomic="true"><p id="enemy-flavor">冒険は、小さな一歩から。</p><div class="message-result"><div class="timing empty" id="timing-result" aria-hidden="true"><span id="timing-value"></span><small>秒</small></div><p id="result-line" class="result-line"></p></div><strong id="hit-label" class="hit-label"></strong></div>
         </div>
         <div class="control-panel" id="control-panel">
-          <div class="mode-heading"><span id="difficulty-badge" class="difficulty-badge"></span><span id="mode-label" class="eyebrow">SWORD / 攻撃</span><h2 id="action-instruction">1秒で離して攻撃！</h2></div>
-          <div class="dial-wrap" id="dial-wrap">
+          <div class="mode-heading"><h2 id="action-instruction">1秒で離して攻撃！</h2></div>
+          <div class="dial-wrap" id="dial-wrap"><button id="pause-button" class="pause-icon" aria-label="一時停止" title="一時停止"><span aria-hidden="true">Ⅱ</span></button>
             <svg class="dial" viewBox="0 0 240 240" aria-hidden="true"><circle class="dial-track" cx="120" cy="120" r="103"/><circle class="dial-window" cx="120" cy="120" r="103"/><circle id="dial-progress" class="dial-progress" cx="120" cy="120" r="103"/><path class="target-notch" d="m18 170 18-2-8 15z"/><text x="23" y="191" class="target-label">1.0</text></svg>
             <button id="action-button" class="action-button" aria-label="長押しして1秒で離す" disabled><img id="action-art" src="./assets/ui/Attack_button.png" alt="" draggable="false"><svg aria-hidden="true"><use id="action-icon" href="#icon-sword"/></svg><span id="button-lock" hidden aria-hidden="true">Ⅱ</span><span id="button-label">長押し</span><small id="button-subtitle">HOLD & RELEASE</small></button>
           </div>
-          <div class="timing empty" id="timing-result" aria-live="polite" aria-hidden="true"><span id="timing-value"></span><small>SEC</small></div>
-          <p id="result-line" class="result-line" aria-live="polite">光を1.0の目印に合わせよう</p>
-          <div class="next-defense"><span>次の防御</span><div id="defense-pips" class="defense-pips"></div><small id="defense-count">あと3回</small></div>
-          <p class="control-note">剣も盾も、操作は同じ。<br>押してから1秒で離そう。</p>
+          <div class="control-status"><span id="difficulty-badge" class="difficulty-badge"></span><div id="defense-pips" class="defense-pips" role="img" aria-label="防御まであと3回"></div></div>
         </div>
       </div>
     </section>
 
     <section id="shop-screen" class="shop-screen" hidden>
       <div class="shop-art"><img src="./assets/backgrounds/itemshop512.png" alt="品物が並ぶ店内で迎える店主"></div>
-      <div class="shop-heading"><p class="eyebrow">FAIRY TREE EMPORIUM</p><h1>旅の合間の、小さな支度。</h1><p id="shop-description">次の戦いに備えて、力を選ぼう。</p><div class="wallet"><svg><use href="#icon-gold"/></svg><b id="shop-gold">0</b><span>G</span></div></div>
+      <div class="shop-heading"><h1>旅の合間の、小さな支度。</h1><div class="wallet"><div class="wallet-total"><svg><use href="#icon-gold"/></svg><b id="shop-gold">0</b><span>G</span></div><strong id="shop-reward" hidden aria-hidden="true"></strong><span id="wallet-status" class="sr-only" role="status"></span></div></div>
       <div id="shop-cards" class="shop-cards"></div>
       <div class="shop-footer"><p id="shop-message" aria-live="polite">体力は次のステージへ持ち越します。</p><button id="shop-return" class="primary-button">戻る <small>次の戦いへ →</small></button></div>
     </section>
